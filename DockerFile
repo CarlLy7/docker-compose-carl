@@ -1,0 +1,19 @@
+# 使用 JDK 8 的基础镜像
+FROM openjdk:8-jdk-alpine
+
+# 设置工作目录
+WORKDIR /app
+
+# 将构建好的 JAR 文件复制到容器内
+COPY renren-generator-1.0.0.jar /app/carl-gen.jar
+
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://10.100.133.145:3306/msg-platform
+ENV SPRING_DATASOURCE_USERNAME=root
+ENV SPRING_DATASOURCE_PASSWORD=123456
+ENV SPRING_DATASOURCE_DRIVERCLASSNAME=com.mysql.cj.jdbc.Driver
+ENV RENREN_DATABASE=mysql
+# 暴露应用端口
+EXPOSE 80
+
+# 运行 Spring Boot 应用
+ENTRYPOINT ["java", "-jar", "/app/carl-gen.jar"]
