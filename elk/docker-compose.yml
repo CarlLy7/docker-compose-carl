@@ -1,7 +1,8 @@
 version: '3.7'
 services:
     elasticsearch:
-        image: elasticsearch:7.17.4
+        #image: elasticsearch:7.17.4
+        image: lyq0088/carl:es7.17.4-ik1.0
         container_name: elasticsearch
         privileged: true
         user: root
@@ -13,7 +14,7 @@ services:
             #设置使用jvm内存大小
             - ES_JAVA_OPTS=-Xms512m -Xmx512m
         volumes:
-            - d:/skp-workspace/programe/docker-compose-carl/docker-compose-carl/elk/plugins:/usr/share/elasticsearch/plugins
+            #    - d:/skp-workspace/programe/docker-compose-carl/docker-compose-carl/elk/plugins:/usr/share/elasticsearch/plugins
             - d:/skp-workspace/programe/docker-compose-carl/docker-compose-carl/elk/data:/usr/share/elasticsearch/data
         ports:
             - 9200:9200

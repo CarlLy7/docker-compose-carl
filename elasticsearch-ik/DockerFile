@@ -1,0 +1,28 @@
+# 使用官方的 Elasticsearch 镜像作为基础镜像
+FROM elasticsearch:7.17.4
+
+# 设置工作目录
+WORKDIR /usr/share/elasticsearch
+
+# 创建 plugins 目录
+RUN mkdir -p plugins
+
+# 将本地的压缩包复制到容器中
+COPY elasticsearch-analysis-ik-7.17.4.zip /usr/share/elasticsearch/plugins/elasticsearch-analysis-ik-7.17.4.zip
+
+# 切换到 plugins 目录并解压 IK 分词器插件
+RUN cd /usr/share/elasticsearch/plugins/ && \
+    # 解压插件（确保解压后的内容是文件夹而非文件）
+    unzip elasticsearch-analysis-ik-7.17.4.zip -d elasticsearch-analysis-ik-7.17.4 && \
+    # 删除压缩包
+    rm elasticsearch-analysis-ik-7.17.4.zip && \
+    cd ..
+
+# 设置环境变量，配置为单节点模式
+ENV discovery.type=single-node
+
+# 暴露 Elasticsearch 默认端口
+EXPOSE 9200 9300
+
+# 启动 Elasticsearch
+CMD ["bin/elasticsearch"]
