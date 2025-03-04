@@ -1,0 +1,27 @@
+services:
+    zookeeper:
+        image: zookeeper:latest
+        container_name: dubbo-zk
+        ports:
+            - "2181:2181"
+        volumes:
+            - ./dubbo-zk/data:/data
+            - ./dubbo-zk/datalog:/datalog
+            - /etc/localtime:/etc/localtime
+        networks:
+            - dubbo-zk-net
+    dubbo-admin:
+        image: chenchuxin/dubbo-admin:latest
+        depends_on:
+            - zookeeper
+        ports:
+            - "9090:8080"
+        environment:
+            - dubbo.registerregistry.address=zookeeper://zookeeper:2181
+            - dubbo.config-center=zookeeper://zookeeper:2181
+            - dubbo.metadata-report.address=zookeeper://zookeeper:2181
+        networks:
+            - dubbo-zk-net
+networks:
+    dubbo-zk-net:
+        driver: bridge
