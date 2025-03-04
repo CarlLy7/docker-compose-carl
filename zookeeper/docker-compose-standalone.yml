@@ -1,0 +1,12 @@
+services:
+    zk-standalone:
+        image: zookeeper:latest
+        restart: always
+        container_name: zk-standalone
+        ports:
+            - "2181:2181"
+            - "8080:8080"
+        volumes:
+            - ./zk-standalone/data:/data
+            - ./zk-standalone/datalog:/datalog
+            - /etc/localtime:/etc/localtime
