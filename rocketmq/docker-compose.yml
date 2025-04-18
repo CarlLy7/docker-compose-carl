@@ -1,0 +1,73 @@
+services:
+  namesrv1:
+    image: apache/rocketmq:4.9.6
+    container_name: namesrv1
+    ports:
+      - 9876:9876
+    networks:
+      - rocketmq
+    command: sh mqnamesrv
+
+  broker1:
+    image: apache/rocketmq:4.9.6
+    container_name: broker1
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    environment:
+      - NAMESRV_ADDR=namesrv1:9876
+      - BROKER_NAME=broker1-master
+      - BROKER_ID=0
+      - BROKER_ROLE=ASYNC_MASTER
+    depends_on:
+      - namesrv1
+    networks:
+      - rocketmq
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.9.6/conf/broker.conf
+
+  broker2:
+    image: apache/rocketmq:4.9.6
+    container_name: broker2
+    ports:
+      - 10910:10909
+      - 10913:10911
+      - 10914:10912
+    environment:
+      - NAMESRV_ADDR=namesrv1:9876
+    depends_on:
+      - namesrv1
+    networks:
+      - rocketmq
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.9.6/conf/broker.conf
+
+  broker3:
+    image: apache/rocketmq:4.9.6
+    container_name: broker3
+    ports:
+      - 10915:10909
+      - 10916:10911
+      - 10917:10912
+    environment:
+      - NAMESRV_ADDR=namesrv1:9876
+    depends_on:
+      - namesrv1
+    networks:
+      - rocketmq
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.9.6/conf/broker.conf
+
+  rocketmq-dashboard:
+    image: apacherocketmq/rocketmq-dashboard:latest
+    container_name: rocketmq-dashboard
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv1:9876
+    depends_on:
+      - namesrv1
+    networks:
+      - rocketmq
+
+networks:
+  rocketmq:
+    driver: bridge
