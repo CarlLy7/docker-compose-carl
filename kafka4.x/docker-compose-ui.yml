@@ -1,0 +1,15 @@
+services:
+    kafka-ui:
+        restart: always
+        image: provectuslabs/kafka-ui:latest
+        network_mode: "bridge"
+        container_name: kafka-ui
+        ports:
+            - 9001:8080
+        volumes:
+            - ./home/ui-kafka/etc/localtime:/etc/localtime
+        environment:
+            # 集群名称
+            - KAFKA_CLUSTERS_0_NAME=local
+            # 集群地址
+            - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=host.docker.internal:9092 #替换成你自己的IP
